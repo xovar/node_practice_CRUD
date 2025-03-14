@@ -6,7 +6,7 @@ const app = express();
 
 
 app.use(express.json());
-
+/* to add product */
 app.post('/api/product', async (req, res) => {
     try {
         const product = await Product.create(req.body);
@@ -16,7 +16,7 @@ app.post('/api/product', async (req, res) => {
         res.status(500).json(error.message);
     }
 });
-
+/* to get all products */
 app.get('/api/product', async(req,res) =>{
     try{
         const products = await Product.find({});
@@ -26,6 +26,21 @@ app.get('/api/product', async(req,res) =>{
         res.status(500).json({massage: error.massage})
     }
 })
+
+/* to get single product */
+
+app.get('/api/product/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const product = await Product.findById(id).lean();
+        if (!product) {
+            return res.status(404).json({ message: 'Product not found' });
+        }
+        res.status(200).json(product);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
 
 app.get('/', (_, res) => {
     res.send('The Api Is Working Well Buddy ;-)');
