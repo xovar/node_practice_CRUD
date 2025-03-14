@@ -42,6 +42,20 @@ app.get('/api/product/:id', async (req, res) => {
     }
 });
 
+/* to update product */
+
+app.put('/api/product/:id', async (req, res) => {
+    try {
+        const product = await Product.findByIdAndUpdate(req.params.id, req.body, { new: true }).lean();
+        if (!product) {
+            return res.status(404).json({ message: "Product Not Found" });
+        }
+        res.status(200).json(product);
+    } catch (error) {
+        res.status(500).json({ message: error.message });
+    }
+});
+
 app.get('/', (_, res) => {
     res.send('The Api Is Working Well Buddy ;-)');
 });
